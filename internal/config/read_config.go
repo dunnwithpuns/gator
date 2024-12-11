@@ -6,12 +6,13 @@ import (
 )
 
 func READ() (Config, error) {
-	home, err := os.UserHomeDir()
+
+	configFile, err := getConfigFilePath()
 	if err != nil {
 		return Config{}, err
 	}
 
-	data, err := os.ReadFile(home + "/.gatorconfig.json")
+	data, err := os.ReadFile(configFile)
 	if err != nil {
 		return Config{}, err
 	}
