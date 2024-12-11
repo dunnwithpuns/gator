@@ -8,6 +8,7 @@ import (
 func SetUser(userName string) error {
 
 	cfg := Config {
+		DB_URL: databaseURL,
 		Current_User_Name: userName,
 	}
 
