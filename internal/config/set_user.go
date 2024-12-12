@@ -5,9 +5,9 @@ import (
 	"os"
 )
 
-func SetUser(userName string) error {
+func (Config) SetUser(userName string) error {
 
-	cfg := Config {
+	cfg := Config{
 		DB_URL: databaseURL,
 		Current_User_Name: userName,
 	}
