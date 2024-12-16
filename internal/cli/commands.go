@@ -1,13 +1,8 @@
-package main
+package cli
 
 import (
 	"fmt"
 )
-
-type command struct {
-	name string
-	arguments string
-}
 
 type commands struct {
 	commandsMap map[string]func(*state, command) error
@@ -27,20 +22,4 @@ func (c *commands) run(s *state, cmd command) error {
 	}
 
 	return handlerFunction(s, cmd)
-}
-
-func handlerLogin(s *state, cmd command) error {
-
-	if cmd.arguments == "" {
-		return fmt.Errorf("No username submitted")
-	}
-
-	err := s.config.SetUser(cmd.arguments)
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("The user name has been set to: %v", cmd.arguments)
-
-	return nil
 }

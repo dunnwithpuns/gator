@@ -1,7 +1,7 @@
-package main
+package cli
 
 import "github.com/dunnwithpuns/gator/internal/config"
 
-type state struct {
-	config *config.Config
+type State struct {
+	Config *config.Config
 }
