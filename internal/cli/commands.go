@@ -4,19 +4,19 @@ import (
 	"fmt"
 )
 
-type commands struct {
-	commandsMap map[string]func(*state, command) error
+type Commands struct {
+	CommandsMap map[string]func(*State, Command) error
 }
 
-func (c *commands) register(name string, f func(*state, command) error) {
+func (c *Commands) Register(name string, f func(*State, Command) error) {
 
-	c.commandsMap[name] = f
+	c.CommandsMap[name] = f
 
 }
 
-func (c *commands) run(s *state, cmd command) error {
+func (c *Commands) Run(s *State, cmd Command) error {
 
-	handlerFunction, exists := c.commandsMap[cmd.name]
+	handlerFunction, exists := c.CommandsMap[cmd.name]
 	if !exists {
 		return fmt.Errorf("%v is not a registered command", cmd)
 	}

@@ -9,7 +9,7 @@ type Command struct {
 	arguments string
 }
 
-func LoginHandler(s *State, cmd Command) error {
+func handlerLogin(s *State, cmd Command) error {
 
 	if cmd.arguments == "" {
 		return fmt.Errorf("No username submitted")
