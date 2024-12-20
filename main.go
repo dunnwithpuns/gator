@@ -28,14 +28,14 @@ func main() {
 
 	input := os.Args
 
-	if len(input) > 2 {
+	if len(input) < 2 {
 		fmt.Println("Not enough arguments entered")
 		os.Exit(1)
 	}
 
 	var inputArguments []string
 	
-	if len(input) > 3 {
+	if len(input) > 2 {
 		inputArguments = input[2:]
 	}
 
