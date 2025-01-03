@@ -1,11 +1,20 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
-	"github.com/dunnwithpuns/gator/internal/config"
-	"github.com/dunnwithpuns/gator/internal/cli"
 	"os"
+
+	"github.com/dunnwithpuns/gator/internal/cli"
+	"github.com/dunnwithpuns/gator/internal/config"
+	"github.com/dunnwithpuns/gator/internal/database"
+	_ "github.com/lib/pq"
 )
+
+type state struct {
+	db *database.Queries
+	cfg *config.Config
+}
 
 func main() {
 
@@ -16,8 +25,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	state := cli.State{
-		Config: &cfg,
+	state := state{
+		cfg: &cfg,
 	}
 
 	commands := cli.Commands{
@@ -50,4 +59,11 @@ func main() {
 		os.Exit(1)
 	}
 
+
+	db, err := sql.Open("postgres", cfg.DB_URL)
+	if err != nil {
+		fmt.Printf("Error: %v", err)
+	}
+
+	dbQueries := database.New(db)
 }

@@ -1,7 +1,11 @@
 package cli
 
-import "github.com/dunnwithpuns/gator/internal/config"
+import (
+	"github.com/dunnwithpuns/gator/internal/config"
+	"github.com/dunnwithpuns/gator/internal/database"
+)
 
 type State struct {
-	Config *config.Config
+	db *database.Queries
+	cfg *config.Config
 }
