@@ -11,11 +11,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type state struct {
-	db *database.Queries
-	cfg *config.Config
-}
-
 func main() {
 
 	cfg, err := config.READ()
@@ -25,9 +20,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	state := state{
-		cfg: &cfg,
+	db, err := sql.Open("postgres", cfg.DB_URL)
+	if err != nil {
+		fmt.Printf("Error: %v", err)
 	}
+
+	dbQueries := database.New(db)
+
+	state := cli.NewState(dbQueries, &cfg)
 
 	commands := cli.Commands{
 		CommandsMap: make(map[string]func(*cli.State, cli.Command) error),
@@ -53,17 +53,11 @@ func main() {
 		Arguments: inputArguments,
 	}
 
-	err = commands.Run(&state, inputCommand)
+	err = commands.Run(state, inputCommand)
 	if err != nil {
 		fmt.Printf("Error: %v", err)
 		os.Exit(1)
 	}
 
-
-	db, err := sql.Open("postgres", cfg.DB_URL)
-	if err != nil {
-		fmt.Printf("Error: %v", err)
-	}
-
-	dbQueries := database.New(db)
+	
 }
