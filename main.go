@@ -35,6 +35,8 @@ func main() {
 
 	commands.Register("login", cli.LoginHandler)
 
+	commands.Register("register", cli.RegisterHandler)
+
 	input := os.Args
 
 	if len(input) < 2 {

@@ -10,7 +10,7 @@ type Config struct {
 	Current_User_Name string `json:"current_user_name"`
 }
 
-const databaseURL = "postgres://example"
+const databaseURL = "postgres://postgres:postgres@localhost:5432/gator?sslmode=disable"
 const configFileName = "/.gatorconfig.json"
 
 func getConfigFilePath() (string, error) {
