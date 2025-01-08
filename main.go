@@ -34,8 +34,9 @@ func main() {
 	}
 
 	commands.Register("login", cli.LoginHandler)
-
 	commands.Register("register", cli.RegisterHandler)
+	commands.Register("reset", cli.ResetHandler)
+	commands.Register("users", cli.UsersHandler)
 
 	input := os.Args
 

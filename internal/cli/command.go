@@ -62,9 +62,6 @@ func RegisterHandler(s *State, cmd Command) error {
 
 	name := cmd.Arguments[0]
 
-	// required for sqlc functions
-	ctx := context.Background()
-
 	params := database.CreateUserParams{
 		ID: uuid.New(),
 		CreatedAt: time.Now(),
@@ -73,9 +70,10 @@ func RegisterHandler(s *State, cmd Command) error {
 	}
 
 	// checking if user exists
-	_, err := s.db.GetUser(ctx, name)
+	_, err := s.db.GetUser(context.Background(), name)
 	// if err == nil, that user already exists
 	if err == nil {
+		fmt.Printf("Could not register user because %v already exists", name)
 		os.Exit(1)
 	}
 	// if err is not a sql.ErrNoRows error, return err as it is a different failure condition
@@ -83,7 +81,7 @@ func RegisterHandler(s *State, cmd Command) error {
 		return err
 	}
 
-	user, err := s.db.CreateUser(ctx, params)
+	user, err := s.db.CreateUser(context.Background(), params)
 	if err != nil {
 		return err
 	}
@@ -94,6 +92,54 @@ func RegisterHandler(s *State, cmd Command) error {
 	}
 
 	log.Printf("User created: %+v\n", user)
+
+	return nil
+}
+
+func ResetHandler(s *State, cmd Command) error {
+
+	if len(cmd.Arguments) > 0 {
+		return fmt.Errorf("Reset does not require any arguments")
+	}
+
+	err := s.db.ResetUsers(context.Background())
+	if err != nil {
+		fmt.Printf("Error resetting Users table: %v", err)
+		os.Exit(1)
+	}
+
+	log.Printf("Users table has been reset")
+
+	return nil
+}
+
+func UsersHandler(s *State, cmd Command) error {
+
+	if len(cmd.Arguments) > 0 {
+		return fmt.Errorf("Users does not require any arguments")
+	}
+
+
+	users, err := s.db.GetUsers(context.Background())
+	if err != nil {
+		fmt.Printf("Error retrieving user data: %v", err)
+	}
+
+	if len(users) == 0 {
+		fmt.Println("No users registered")
+		return nil
+	}
+
+	currentUser := s.cfg.Current_User_Name
+
+	for _, user := range(users) {
+		if user.Name == currentUser {
+			fmt.Printf("* %v (current)\n", user.Name)
+		} else {
+			 fmt.Printf("* %v\n", user.Name)
+		}
+	}
+
 
 	return nil
 }
